@@ -83,11 +83,7 @@
             bypassUpstreamProxyHosts[host.toLowerCase()] = true;
         });
     }
-
-    app.set('/', __dirname);
-    app.get('/', function(request, response) {
-      response.render('/index');
-    });
+    
     app.get('/proxy/*', function(req, res, next) {
         // look for request like http://localhost:8080/proxy/http://example.com/file?query=1
         var remoteUrl = getRemoteUrlFromParam(req);
@@ -131,13 +127,14 @@
         });
     });
 
-    var server = app.listen(argv.port, argv.public ? undefined : 'localhost', function() {
-        if (argv.public) {
-            console.log('Cesium development server running publicly.  Connect to http://localhost:%d/', server.address().port);
-        } else {
-            console.log('Cesium development server running locally.  Connect to http://localhost:%d/', server.address().port);
-        }
-    });
+    // var server = app.listen(argv.port, argv.public ? undefined : 'localhost', function() {
+    //     if (argv.public) {
+    //         console.log('Cesium development server running publicly.  Connect to http://localhost:%d/', server.address().port);
+    //     } else {
+    //         console.log('Cesium development server running locally.  Connect to http://localhost:%d/', server.address().port);
+    //     }
+    // });
+    var server = app.listen(process.env.PORT || 8080);
 
     server.on('error', function (e) {
         if (e.code === 'EADDRINUSE') {
