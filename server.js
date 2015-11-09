@@ -84,6 +84,10 @@
         });
     }
 
+    app.set('/', __dirname);
+    app.get('/', function(request, response) {
+      response.render('/index');
+    });
     app.get('/proxy/*', function(req, res, next) {
         // look for request like http://localhost:8080/proxy/http://example.com/file?query=1
         var remoteUrl = getRemoteUrlFromParam(req);
