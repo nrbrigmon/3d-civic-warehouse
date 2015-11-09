@@ -1,0 +1,187 @@
+{
+  "type": "FeatureCollection",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 1,
+        "marker-symbol": "h",
+        "marker-color": "#F6DDCC",
+        "type": "a"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.59403634348088,
+          30.167162140864342
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 2,
+        "marker-symbol": "i",
+        "marker-color": "#AE0407",
+        "type": "a"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.666965390597184,
+          30.193496695427378
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 3,
+        "marker-symbol": "o",
+        "marker-color": "#A569BD",
+        "type": "b"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.726047150286348,
+          30.301952638528242
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 4,
+        "marker-symbol": "land-use",
+        "marker-color": "#2ECC71",
+        "type": "b"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.668811695587479,
+          30.284416413255098
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 5,
+        "marker-symbol": "zoo",
+        "marker-color": "#21618C",
+        "type": "c"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.70573779539319,
+          30.236574413642821
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 6,
+        "marker-symbol": "rocket",
+        "marker-color": "#F8C471",
+        "type": "c"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.797129892412357,
+          30.22859848157298
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 7,
+        "marker-symbol": "circle-stroked",
+        "marker-color": "#AE0407",
+        "type": "d"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.826670772256932,
+          30.249334558930414
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 8,
+        "marker-symbol": "circle-stroked",
+        "marker-color": "#AE0407",
+        "type": "e"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.766665860072635,
+          30.364897771973069
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 9,
+        "marker-symbol": "circle-stroked",
+        "marker-color": "#AE0407",
+        "type": "f"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.736201827732913,
+          30.346576149309541
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 10,
+        "marker-symbol": "circle-stroked",
+        "marker-color": "#AE0407",
+        "type": "g"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.763896402587207,
+          30.306734701195705
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": 11,
+        "marker-symbol": "airport",
+        "marker-color": "#AE0407",
+        "type": "h"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -97.750972267655214,
+          30.250929460591362
+        ]
+      }
+    }
+  ]
+}

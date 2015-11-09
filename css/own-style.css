@@ -1,0 +1,126 @@
+	#civic-logo {
+	    padding: 5px 8px;
+	    background: rgba(255,255,255,0.8);
+	    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+	    border-radius: 5px;
+	    width:175;
+	    position:absolute;
+	    z-index: 98989;
+	    text-align: center;
+	    color: #777;
+	    top: 10px;
+	    left: 10px;
+      }
+    #civic-logo h4 {
+    	margin: -2px 0 -5px 0px;
+	}
+    #civic-logo img {
+		height:67px;
+		width: auto;
+	}
+	#civic-logo p{
+		margin-top: 10px !important;
+		font-size: small;
+	}
+
+	#fly-through-austin-button{
+	    /*background: white;*/
+	    /*background: rgba(255,255,255,0.8);*/
+	    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+	    position:absolute;
+	    z-index: 98989;
+	    text-align: center;
+	    top: 150px;
+	    left: 8px;
+	}
+	#fly-through-austin-button2{
+	    /*background: white;*/
+	    /*background: rgba(255,255,255,0.8);*/
+	    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+	    position:absolute;
+	    z-index: 98989;
+	    text-align: center;
+	    top: 10px;
+	    left: 10px;
+	}
+	#fly-through-bogota-button{
+	    /*background: white;*/
+	    /*background: rgba(255,255,255,0.8);*/
+	    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+	    position:absolute;
+	    z-index: 98989;
+	    text-align: center;
+	    top: 50px;
+	    left: 10px;
+	}
+	#layer-selection-panel{
+		position: absolute;
+    	background: rgba(255,255,255,0.8);
+	    z-index: 98989;
+	    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+	    top: 200px;
+	    left: 10px;
+	}
+
+	#get-cluster-data{
+	    top: 42px;
+	    right: 5px;
+	    position:absolute;
+	    z-index: 8988;
+	}
+	
+	#cluster-results{
+		text-align: center;
+		display:none;
+		top:80px;
+	    right: 5px;
+	    position:absolute;
+	    z-index: 8988;
+	    background: rgba(48, 51, 54, 0.8);
+	    border: 1px solid #444;
+	    color: #edffff;
+	    fill: #edffff;
+	    border-radius: 4px;
+	    padding: 5px 12px;
+	    margin: 2px 3px;
+	    overflow: hidden;
+	}
+	#cluster-results span{
+	    font-weight: 600;
+	    color: #5BC0DE;
+	}
+	#cluster-results p{
+		margin: 0 0 5px;
+	}
+	#cluster-results ol, #cluster-results li{
+	    text-align: left;
+	}
+	.MSA-dropdown{    
+		margin: 5px 0 5px 0;
+	    background: #5BC0DE;
+	    background-size: contain;
+	    color: white;
+	    border: none;
+	    height:27px;
+	}
+
+	.panel-primary{
+    	border-color: #656565;
+	}
+	.panel-body{
+    	padding: 6px;
+	    font-size: 11px;
+	}
+	
+	.panel-primary>.panel-heading {
+	    background-color: hsl(24, 2%, 59%);
+	    border-color: hsl(24, 2%, 59%);
+	}
+
+	#download-icon-section{
+		background-color: #ffffff;
+	}
+
+	#download-icon-section img{
+		margin: -10px;
+	}

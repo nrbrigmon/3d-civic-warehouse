@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Use correct character set. -->
+  <meta charset="utf-8">
+  <!-- Tell IE to use the latest, best version (or Chrome Frame if pre-IE11). -->
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>3D Warehouse</title>
+  <script src="../Build/Cesium/Cesium.js"></script>
+  <script type="text/javascript" src="data/CityDefinedCVC.js"></script>
+  <script type="text/javascript" src="data/CityDefinedParks.js"></script>
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/own-style.css">
+  <style>
+      @import url(../Build/Cesium/Widgets/widgets.css);
+      html, body, #cesiumContainer {
+          width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      }
+  </style>
+</head>
+<body>
+  <div id="civic-logo">
+    <img src="css/logo_web.png" />
+      <h4 class="cesium-viewer">3D Warehouse</h4>
+      <p class="cesium-viewer">Austin, TX<p>
+  </div>
+  <button id="fly-through-austin-button" class="btn btn-info">Fly through Austin</button>
+  <div id="layer-selection-panel" class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Visible Layers</h3>
+      </div>
+      <div class="panel-body">
+        <input id="layer-points" type="checkbox" checked="true"> Sample Points <br>
+        <input id="layer-polygons" type="checkbox" checked="true"> Parks <br>
+        <input id="layer-buildings" type="checkbox" checked="true"> Building Polygons <br>
+        <input id="layer-models" type="checkbox" checked="true"> Building Models <br>
+        <input id="layer-corridor" type="checkbox" checked="true"> Capitol View Corridor <br>
+      </div>
+  </div>
+  <button id="get-cluster-data" class="cesium-button" title="Cluster Analysis Snapshot">Cluster Analysis Snapshot</button>
+  <div id="cluster-results" > 
+  	<p>
+  		<select id="cluster-name" class="MSA-dropdown" onchange="changeClusterMSA(this.value)">
+  			<option value="10420" lat="-81.5185062" lng="41.079647" >Akron, OH</option>
+			<option value="10500" lat="-84.1630903" lng="31.574965" >Albany, GA </option>
+			<option value="10580" >Albany-Schenectady-Troy, NY</option>
+			<option value="10740" >Albuquerque, NM</option>
+			<option value="10900" >Allentown-Bethlehem-Easton, PA-NJ</option>
+			<option value="11020" >Altoona, PA</option>
+			<option value="11100" >Amarillo, TX </option>
+			<option value="11300" >Anderson, IN</option>
+			<option value="11340" >Anderson, SC</option>
+			<option value="11460" >Ann Arbor, MI</option>
+			<option value="11500" >Anniston-Oxford, AL</option>
+			<option value="11540" >Appleton,WI</option>
+			<option value="11700" >Asheville, NC</option>
+			<option value="12020" >Athens-Clarke County, GA</option>
+			<option value="12060" >Atlanta-Sandy Springs-Marietta, GA</option>
+			<option value="12100" >Atlantic City, NJ</option>
+			<option value="12260" lat="-81.9859989" lng="33.4665105">Augusta-Richmond County, GA-SC</option>
+			<option value="12420" lat="-97.7395" lng="30.277" selected>Austin-Round Rock, TX</option>
+			<option value="12540" >Bakersfield, CA</option>
+			<option value="12580" >Baltimore-Towson, MD</option>
+			<option value="12940" >Baton Rouge, LA</option>
+			<option value="13140" >Beaumont-Port Authur, TX</option>
+			<option value="13380" >Bellingham, WA</option>
+			<option value="13460" >Bend, OR</option>
+			<option value="13740" >Billings, MT </option>
+			<option value="13780" >Binghamton, NY</option>
+			<option value="13820" >Birmingham-Hoover, AL</option>
+			<option value="14020" >Bloomington, IN </option>
+			<option value="14060" >Bloomington-Normal IL</option>
+			<option value="14260" >Boise City-Nampa, ID</option>
+			<option value="14500" >Boulder, CO</option>
+			<option value="14540" >Bowling Green, KY</option>
+  		</select>
+  		- 
+  		<select id="cluster-year" class="MSA-dropdown" onchange="changeClusterYear(this.value)">
+  			<option value='2013' selected>2013</option>
+  			<option value='2012'>2012</option>
+  			<option value='2011'>2011</option>
+  			<option value='2010'>2010</option>
+  			<option value='2009'>2009</option>
+  			<option value='2008'>2008</option>
+  			<option value='2007'>2007</option>
+  			<option value='2006'>2006</option>
+  			<option value='2005'>2005</option>
+  			<option value='2004'>2004</option>
+  			<option value='2003'>2003</option>
+  			<option value='2002'>2002</option>
+  			<option value='2001'>2001</option>
+  			<option value='2000'>2000</option>
+  			<option value='1999'>1999</option>
+  			<option value='1998'>1998</option>
+  		</select>
+  	</p>
+  	<p>Total Population: <span id="cluster-population"></span></p>
+  	<p>Total Employment: <span id="cluster-employment"></span></p>
+  	<p>Prosperity: <span id="cluster-prosperity"></span></p>
+  	<p><b>Strongest Clusters:</b></p>
+  	<ol>
+  		<li><span id="cluster-strongest1"></span></li>
+  		<li><span id="cluster-strongest2"></span></li>
+  		<li><span id="cluster-strongest3"></span></li>
+  		<li><span id="cluster-strongest4"></span></li>
+  		<li><span id="cluster-strongest5"></span></li>
+  	</ol>
+  	<hr style="width:50%">
+  	<p>Cluster Strength: <span id="cluster-strength"></span></p>
+  	<p>Manugfacturing as % of Total: <span id="cluster-manuf"></span></p>
+  	<p>Net Domestic Migration: <span id="cluster-dom-migration"></span></p>
+  	<p>Net International Migration: <span id="cluster-int-migration"></span></p>
+  </div>
+  <div id="cesiumContainer"></div>
+  <script>
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+        baseLayerPicker : true
+    });
+    var camera = viewer.scene.camera;
+    
+    var addModel = function (lng, lat, model){
+            viewer.entities.add({
+                name : model,
+                position : Cesium.Cartesian3.fromDegrees(lng, lat, 0),
+                model : {
+                    uri : 'data/'+model+'.gltf'
+                },
+                description:'<p>Here is where you could provide <a href="">download links</a>, information about the model, or a</p>'+
+                          '<table>'+
+                          '<tr><th>#</th><th>Name</th></tr>'+
+                          '<tr><td>1. </td><td>table</td></tr>'+
+                          '<tr><td>2. </td><td>of</td></tr>'+
+                          '<tr><td>3. </td><td>data</td></tr>'+
+                          '</table>'+'<p>plus room for HTML...</p>',
+            });
+    };
+
+	function getRandomColor() {
+	    var letters = '0123456789ABCDEF'.split('');
+	    var color = '#';
+	    for (var i = 0; i < 6; i++ ) {
+	        color += letters[Math.floor(Math.random() * 16)];
+	    }
+	    return color;
+	}
+
+	function getRandomHeight() {
+		var h = Math.floor(Math.random()*30)+50;
+		return h;
+	}
+
+    //Section for adding Degrees Array
+    var cvc = capitolCorridor.features;
+    for (var i = 0; i < cvc.length; i++){
+      viewer.entities.add({
+          name : 'Capitol View Corridor',
+          polygon : {
+              hierarchy : new Cesium.PolygonHierarchy(
+                  Cesium.Cartesian3.fromDegreesArray( cvc[i].geometry.coordinates )),
+              outline : true,
+              outlineColor : Cesium.Color.WHITE,
+              outlineWidth : 2,
+              material : Cesium.Color.fromCssColorString('#F9E79F').withAlpha(0.4),
+              height: 40
+          },
+          description:'<p style="text-align:center">Download this file:</p> <br>' + 
+          				'<div style="background-color: #ffffff">'+
+          				'<a href=""><img style="margin: -10px" src="data/downloadIcons/csvIcon.png" />' +
+          				'<img style="margin: -10px" src="data/downloadIcons/kmzIcon.png" />' +
+          				'<img style="margin: -10px" src="data/downloadIcons/pdfIcon.png" />' +
+          				'<img style="margin: -10px" src="data/downloadIcons/geojsonIcon.png" />' +
+          				'<img style="margin: -10px" src="data/downloadIcons/shpIcon.png" />  </div></a><br>'
+      });
+    };
+
+//     //Add basic drag and drop functionality
+//     //viewer.extend(Cesium.viewerDragDropMixin);
+
+
+    //Section for adding GeoJSON
+    var cityParks = new Cesium.GeoJsonDataSource();
+  	cityParks.load('/data/CityDefinedParks.geojson').then(function(dataSource) {
+  	  viewer.dataSources.add(dataSource);
+  	  //Get the array of entities
+  	  var entities = dataSource.entities.values;
+  	  var colorHash = {};
+  	  for (var i = 0; i < entities.length; i++) {
+  	      //For each entity, create a random color based on the state name.
+  	      //Some states have multiple entities, so we store the color in a
+  	      //hash so that we use the same color for the entire state.
+  	      var entity = entities[i];
+  		  //color
+  	      entity.polygon.material = Cesium.Color.fromCssColorString('#28B463').withAlpha(0.5);
+  	      entity.polygon.outline = true;
+  	      entity.polygon.outlineColor = Cesium.Color.fromCssColorString('#58D68D').withAlpha(0.5);
+  	  }
+  	});
+
+    var Fire_Truck = new Cesium.BillboardGraphics();
+    Fire_Truck.image = new Cesium.ConstantProperty('css/Fire_Truck.png')
+    var Medical_Cross = new Cesium.BillboardGraphics();
+    Medical_Cross.image = new Cesium.ConstantProperty('css/Medical_Cross.png')
+    var Police_Badge = new Cesium.BillboardGraphics();
+    Police_Badge.image = new Cesium.ConstantProperty('css/Police_Badge.png')
+    var School_Books = new Cesium.BillboardGraphics();
+    School_Books.image = new Cesium.ConstantProperty('css/School_Books.png')
+
+    var pointsPromise = new Cesium.GeoJsonDataSource();
+  	pointsPromise.load('/data/samplePoints.geojson').then(function(dataSource){
+          viewer.dataSources.add(dataSource);
+          //Get the array of entities
+          var entities = dataSource.entities.values;
+          for (var i = 0; i < entities.length; i++) {
+                var entity = entities[i];
+                var entityID = entity.properties.id;
+                if (entityID == 10){
+                  entity.point = undefined;
+                  entity.billboard = Fire_Truck;
+                } else if (entityID == 9){
+                  entity.point = undefined;
+                  entity.billboard = Medical_Cross;
+                } else if (entityID == 8){
+                  entity.point = undefined;
+                  entity.billboard = Police_Badge;
+                } else if (entityID == 7){
+                  entity.point = undefined;
+                  entity.billboard = School_Books;
+                } else {
+                  entity.markerSymbol = 'N';
+                }
+          }
+      });
+
+    //Section for adding GeoJSON
+    var buildingsPromise = new Cesium.GeoJsonDataSource();
+  	buildingsPromise.load('/data/SelectedBuildings.geojson').then(function(dataSource) {
+  	  viewer.dataSources.add(dataSource);
+  	  //Get the array of entities
+  	  var entities = dataSource.entities.values;
+  	  var colorHash = {};
+  	  for (var i = 0; i < entities.length; i++) {
+  	      //For each entity, create a random color based on the state name.
+  	      //Some states have multiple entities, so we store the color in a
+  	      //hash so that we use the same color for the entire state.
+  	      var entity = entities[i];
+  	      var name = entity.name;
+  	      
+  	      //Set the polygon material to our random color.
+  	      entity.polygon.material = Cesium.Color.fromCssColorString(getRandomColor());
+  	      //Remove the outlines.
+  	      entity.polygon.outline = false;
+  	      // console.log(entity.properties);
+  	      entity.polygon.extrudedHeight = getRandomHeight();
+  	  }
+  	});
+
+
+    var flyToAustin = function(){
+        camera.flyTo({
+            destination : Cesium.Cartesian3.fromDegrees(-97.7395, 30.277, 230),
+            orientation : {
+                heading : Cesium.Math.toRadians(200.0),
+                pitch : Cesium.Math.toRadians(-10.0)
+              },
+            easingFunction : Cesium.EasingFunction.QUADRACTIC_IN
+        });
+    };    
+
+    var flyToMSA = function(lat, lng){
+        camera.flyTo({
+            destination : Cesium.Cartesian3.fromDegrees(lat, lng, 15000),
+            orientation : {
+                heading : 0,
+                pitch : -1.5,
+                roll: 0
+              },
+            easingFunction : Cesium.EasingFunction.QUADRACTIC_IN
+        });
+    };
+
+
+
+	var changeClusterYear = function(year){
+		//get FIPS code with jQuery
+		var fips = $( "#cluster-name :selected").val();
+		var apiCall = "//clustermapping.us/data/region/msa/"+fips+"/"+year;
+	    runAPICall(apiCall);
+	}
+
+	var changeClusterMSA = function(FIPS){
+		var apiCall = "//clustermapping.us/data/region/msa/"+FIPS+"/2013";
+		$( "#cluster-year > [value='2013'] ").attr("selected", "true");
+	    
+
+      	runAPICall(apiCall);
+	    //camera fly to 
+	    var lat = $( "#cluster-name :selected ").attr("lat");
+	    var lng = $( "#cluster-name :selected").attr("lng");
+	    console.log(lat," ", lng);
+	    if (lat && lng) {
+	    	flyToMSA(lat, lng);
+	    }
+	}
+
+	var runAPICall = function(apiCall){
+	    $.get( apiCall, function( clusterDataOBJ ) {
+	    	// $( "#cluster-name" ).html( clusterDataOBJ.region_name_t).fadeIn("slow");
+	    	//$( "#cluster-year" ).html( clusterDataOBJ.year_t).fadeIn("slow");
+	    	$( "#cluster-population" ).html( clusterDataOBJ.total_population_tf).fadeIn("slow");
+				var count = 1;
+				for ( var i in clusterDataOBJ.strong_clusters){
+					if (count <= 5 ){
+  					$( "#cluster-strongest"+count+"").html( clusterDataOBJ.strong_clusters[i].name);	
+					} 
+					count++;
+				}
+	
+	    	$( "#cluster-strength" ).html( (clusterDataOBJ.str_emp_per_tf).toFixed(2) ).fadeIn("slow");
+	    	$( "#cluster-employment" ).html( clusterDataOBJ.emp_tl ).fadeIn("slow");
+	    	$( "#cluster-manuf" ).html( (clusterDataOBJ.manufacturing_intensity_tf).toFixed(2)+"%" ).fadeIn("slow");
+	    	$( "#cluster-dom-migration" ).html( (clusterDataOBJ.net_domestic_migration_per_tf).toFixed(3)+"%" ).fadeIn("slow");
+	    	$( "#cluster-int-migration" ).html( (clusterDataOBJ.net_international_migration_per_tf).toFixed(3)+"%" ).fadeIn("slow"); 
+	    	$( "#cluster-prosperity" ).html( "$"+(clusterDataOBJ.gdp_per_capita_tf).toFixed(2) ).fadeIn("slow");
+	    });
+	}
+
+    $(document).ready(function(){
+		//on app load... fly to Austin
+		setTimeout(function() { flyToAustin(); 	}, 5000);
+
+		$('#fly-through-austin-button').on('click', function(){
+			camera.flyTo({ //camera 1 shot
+			    destination : Cesium.Cartesian3.fromDegrees(-97.74462239, 30.26326654, 20),
+			    orientation : {
+			                    heading : Cesium.Math.toRadians(15.0),
+			                    pitch : Cesium.Math.toRadians(0.0)
+			                },
+			    easingFunction : Cesium.EasingFunction.LINEAR_NONE,
+			    complete : function() {
+			      setTimeout(function() {
+			          camera.flyTo({ //camera 2 shot
+						destination : Cesium.Cartesian3.fromDegrees(-97.74104563, 30.27274395, 2),
+						orientation : {
+						  heading : Cesium.Math.toRadians(15.0),
+						  pitch : Cesium.Math.toRadians(5.0)
+						},
+						easingFunction : Cesium.EasingFunction.CIRCULAR_OUT,
+						complete: function() { 
+						  setTimeout(function() { 
+						  camera.flyTo({ //camera 3 shot
+						    destination : Cesium.Cartesian3.fromDegrees(-97.74104563, 30.27274395, 2),
+						    orientation : {
+						      heading : Cesium.Math.toRadians(15.0),
+						      pitch : Cesium.Math.toRadians(5.0)
+						    },
+						    easingFunction : Cesium.EasingFunction.QUADRATIC_IN,
+						    complete: function() { 
+							  camera.flyTo({ //camera 4 shot
+							  	destination : Cesium.Cartesian3.fromElements(-742565.167182562, -5462858.56356937, 3196675.985611882),
+							    orientation : {
+				                    heading : 0.3848143069579901,
+				                    pitch : -0.1552050645616796,
+				                    roll: 0.0011097778111626155
+							    },
+							    easingFunction : Cesium.EasingFunction.QUADRATIC_IN,
+							    duration: 5,
+							    complete: function() { 
+								  camera.flyTo({//camera 5 shot
+								  	destination : Cesium.Cartesian3.fromElements(-742544.876496952, -5462972.682377184, 3196840.944131038),
+								    orientation : {
+					                    heading : 0.3149825262146786,
+					                    pitch : -1.5687129441518368,
+					                    roll: 0
+								    },
+								    easingFunction : Cesium.EasingFunction.QUADRATIC_IN,
+								    duration: 5,
+								    complete: function() { 
+									  camera.flyTo({ //camera 6 shot
+									    destination : Cesium.Cartesian3.fromElements(-742294.8166877326, -5462747.442294094, 3196874.526697551),
+									    orientation : {
+						                    heading : 3.726399955831468,
+						                    pitch : -0.03649318691464609,
+						                    roll: 6.281572582573906
+									    },
+									    easingFunction : Cesium.EasingFunction.QUADRATIC_IN,
+									    duration: 5,
+								    	complete: function() { 
+										  camera.flyTo({ //camera 7 shot
+										    destination : Cesium.Cartesian3.fromElements(-742531.0600750523, -5462813.773002668, 3196740.72387304),
+										    orientation : {
+							                    heading : 3.206916316192542,
+							                    pitch : -0.11358979502098387,
+							                    roll: 6.282992903411614
+										    },
+										    easingFunction : Cesium.EasingFunction.QUADRATIC_IN,
+										    duration: 5
+									  	  }); //end camera 7 shot
+								    	}
+									  }); //end camera 6 shot
+									}
+								  }); //end camera 5 shot
+								}
+							  });//end camera 4 shot
+							}
+						  }); //end camera 3 shot
+
+				      	  }, 8000);
+						}
+					  
+
+					  });//end camera 2 shot
+				      
+			        }, 3000);
+			    }
+			});//end camera 1 shot
+		});
+
+		$('#get-cluster-data').on('click', function(){
+		    $( "#cluster-results" ).toggle("fast");
+		    $( "#cluster-year > [value='2013'] ").attr("selected", "true");
+		    var fips = $( "#cluster-name :selected").val();
+      		var apiCall = "//clustermapping.us/data/region/msa/"+fips+"/2013";
+      		runAPICall(apiCall);
+		});
+
+		//section for changing checkboxes
+		$('#layer-points ').change(function(){
+			if (this.checked) {
+				viewer.dataSources.add(pointsPromise);
+				
+		    } else {
+				viewer.dataSources.remove(pointsPromise);
+
+		    }
+		});
+
+		$('#layer-polygons ').change(function(){
+			if (this.checked) {
+				console.log('turned on...');
+				viewer.dataSources.add(cityParks);
+		    } else {
+		    	console.log('turned off...');
+				viewer.dataSources.remove(cityParks);
+		    }
+		});
+
+		$('#layer-corridor').change(function(){
+			var entityLength = viewer.entities.values.length;
+			if (this.checked) {
+				console.log('turned on...');
+				for (var i = 0; i < entityLength; i++){
+					var entityName = viewer.entities.values[i].name;
+					if (entityName == 'Capitol View Corridor'){
+						viewer.entities.values[i].show = true;
+					}
+				}
+
+		    } else {
+		    	console.log('turned off...');
+				for (var i = 0; i < entityLength; i++){
+					var entityName = viewer.entities.values[i].name;
+					if (entityName == 'Capitol View Corridor'){
+						viewer.entities.values[i].show = false;
+					}
+				}
+
+		    }
+
+		});
+
+		$('#layer-buildings ').change(function(){
+			if (this.checked) {
+				console.log('turned on...');
+				viewer.dataSources.add(buildingsPromise);
+		    } else {
+		    	console.log('turned off...');
+				viewer.dataSources.remove(buildingsPromise);
+		    }
+		});
+
+		$('#layer-models ').change(function(){
+			var entityLength = viewer.entities.values.length;
+			if (this.checked) {
+				console.log('turned on...');
+				for (var i = 0; i < entityLength; i++){
+					var entityName = viewer.entities.values[i].name;
+					if (entityName !== 'Capitol View Corridor'){
+						viewer.entities.values[i].show = true;
+					}
+				}
+
+		    } else {
+		    	console.log('turned off...');
+				for (var i = 0; i < entityLength; i++){
+					var entityName = viewer.entities.values[i].name;
+					if (entityName !== 'Capitol View Corridor'){
+						viewer.entities.values[i].show = false;
+					}
+				}
+
+		    }
+		});
+
+
+    }); //End of jQuery
+
+    addModel(-97.740399, 30.274683,'TexasCapitolBuilding');
+    addModel(-97.74100916, 30.27285075,'crowd2');
+    addModel(-97.747169, 30.264572,'AustinCityHall');
+    addModel(-97.743562, 30.264291,'FrostBankTower');
+    addModel(-97.744811, 30.264926,'Austonian');
+    addModel(-97.742400, 30.264025,'groupBuildings');
+
+    addModel(-97.74092992, 30.27292524,'tree');
+    addModel(-97.74109542, 30.27295540,'tree');
+    addModel(-97.74065319, 30.27412506,'tree');
+    addModel(-97.74050523, 30.27408014,'tree');
+
+    var treeNum = 6;
+    var startx1 = -97.74054097;
+    var starty1 = 30.27398073;
+    var startx2 = -97.74069154;
+    var starty2 = 30.27404276;
+    for (var i = 0; i < treeNum; i++){
+      addModel(startx1, starty1,'tree');
+      addModel(startx2, starty2,'tree');
+      startx1 += -.00006228;
+      starty1 += -.00017822;
+      startx2 += -.00006228;
+      starty2 += -.00017822;
+
+    }
+
+
+
+
+    // //track the mouse 
+
+    // var ellipsoid = viewer.scene.globe.ellipsoid;
+    // var entity = viewer.entities.add({
+    //         label : {
+    //             show : false
+    //         }
+    //     });
+    // // Mouse over the globe to see the cartographic position
+    // handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+    // handler.setInputAction(function(movement) {
+    //     var cartesian = viewer.camera.pickEllipsoid(movement.endPosition, ellipsoid);
+    //     if (cartesian) {
+    //         var cartographic = ellipsoid.cartesianToCartographic(cartesian);
+    //         var longitudeString = Cesium.Math.toDegrees(cartographic.longitude).toFixed(8);
+    //         var latitudeString = Cesium.Math.toDegrees(cartographic.latitude).toFixed(8);
+    //         entity.position = cartesian;
+    //         entity.label.show = true;
+    //         entity.label.text = '(' + longitudeString + ', ' + latitudeString + ')';
+    //     } else {
+    //         entity.label.show = false;
+    //     }
+    // }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+    //	//track the camera
+
+    //    handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+    //    handler.setInputAction(function(movement) {
+    //     console.log('Coordinates: ' + viewer.camera.position);
+    //     // console.log('Height: ' + viewer.camera.positionCartographic.height);
+    //     console.log('Heading: ' + viewer.camera.heading);
+    //     console.log('Pitch: ' + viewer.camera.pitch);
+    //     console.log('Roll: ' + viewer.camera.roll);
+    // },  Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+  </script>
+</body>
+</html>
