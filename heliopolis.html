@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Use correct character set. -->
+  <meta charset="utf-8">
+  <!-- Tell IE to use the latest, best version (or Chrome Frame if pre-IE11). -->
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>3D Warehouse</title>
+  <script src="../Build/Cesium/Cesium.js"></script>
+  <script type="text/javascript" src="data/heliopolis-lots-degrees.js"></script>
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/own-style.css">
+  <style>
+      @import url(../Build/Cesium/Widgets/widgets.css);
+      html, body, #cesiumContainer {
+          width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      }
+  </style>
+</head>
+<body>
+  <button id="fly-through-austin-button2" class="btn btn-info">Fly to Austin</button>
+  <button id="fly-through-bogota-button" class="btn btn-info">Fly to Bogota</button>
+  <button id="fly-through-heliopolis-button2" class="btn btn-info">Fly to Heliopolis</button>
+  <div id="cesiumContainer"></div>
+  <script>
+    var terrainProvider = new Cesium.CesiumTerrainProvider({
+        url : '//assets.agi.com/stk-terrain/world',
+        requestVertexNormals : true, //adds shading detail to imagery provider.
+        requestWaterMask : true //adds water effects to ocean
+    });
+
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+        baseLayerPicker : false,
+        terrainProvider : terrainProvider,
+    });
+    // The globe must enable lighting to make use of the terrain's vertex normals
+    viewer.scene.globe.enableLighting = true;
+
+    var camera = viewer.scene.camera;
+
+
+    var lotsPackage = heliopolisLots.features;
+    var testCoordinates = [ -46.589451404650298, -23.614372109944664, -46.58944094918526, -23.614398048367782, -46.58947357207974, -23.614441965427719, -46.589495916742159, -23.61445624819379, -46.589517403077394, -23.614408533626492, -46.589451404650298, -23.614372109944664];
+
+
+    var polygonInstance;
+    // for (var i = 0; i < lotsPackage.length; i++){
+		// polygonInstance = new Cesium.GeometryInstance({
+		// 	geometry : new Cesium.PolygonGeometry({
+		// 	  polygon: {
+		// 	  	hierarchy : {
+		// 	      positions : Cesium.Cartesian3.fromDegreesArray( testCoordinates )
+		// 	    }
+		// 	  }
+		// 	}),
+		// 	id : 'polygon',
+		// 	attributes : {
+		// 		color : new Cesium.ColorGeometryInstanceAttribute(0.0, 1.0, 1.0, 0.5)
+		// 	}
+		// });
+
+
+	// 1. create a polygon from points
+	var polygon2 = new Cesium.PolygonGeometry({
+	  polygonHierarchy : {
+	    positions : Cesium.Cartesian3.fromDegreesArray([
+	      -72.0, 40.0,
+	      -70.0, 35.0,
+	      -75.0, 30.0,
+	      -70.0, 30.0,
+	      -68.0, 40.0
+	    ])
+	  }
+	});
+	var geometry2 = Cesium.PolygonGeometry.createGeometry(polygon2);
+    // for (var i = 0; i < lotsPackage.length; i++){
+		polygonInstance = new Cesium.GeometryInstance({
+			geometry : geometry2,
+			id : 'polygon',
+			attributes : {
+				color : new Cesium.ColorGeometryInstanceAttribute(0.0, 1.0, 1.0, 0.5)
+			}
+		});
+		viewer.scene.primitives.add(new Cesium.GroundPrimitive({
+		  geometryInstance : polygonInstance
+		}));
+		viewer.scene.primitives.add(new Cesium.GroundPrimitive({
+		  geometryInstance : polygonInstance
+		}));
+	// };
+
+    $(document).ready(function(){
+
+		$('#fly-through-austin-button2').on('click', function(){
+	      camera.flyTo({ //camera 1 shot
+			    destination : Cesium.Cartesian3.fromElements(-1557173.9178660905, -8968196.985885581, 2599848.211240223),
+		  orientation : {
+		          heading : 0.12535201602841894,
+		          pitch : -1.1105178498860098,
+		          roll: 6.2650514308350544
+		  },
+			    easingFunction : Cesium.EasingFunction.LINEAR_NONE,
+		  duration: 5,
+			    complete : function() {
+			      setTimeout(function() {
+			          camera.flyTo({ //camera 2 shot
+						destination : Cesium.Cartesian3.fromElements(-627953.2904002159, -5593336.948669743, 3193070.0652805516),
+		  orientation : {
+		    heading : 5.296281691580247,
+		    pitch : -0.614992296192574,
+		    roll : 6.283169113293958
+		  },
+						easingFunction : Cesium.EasingFunction.CIRCULAR_OUT,
+		  duration: 5,    
+						complete: function() { 
+						  camera.flyTo({ //camera 3 shot
+						    destination : Cesium.Cartesian3.fromElements(-746938.0353089465, -5492652.215895205, 3213578.1158920187),
+		        orientation : {
+		                  heading : 0.05355833799594034,
+		                  pitch : -1.5648507420875224,
+		                  roll: 0
+		        },
+						    easingFunction : Cesium.EasingFunction.QUADRATIC_IN,
+		      duration: 5,
+						    complete: function() { 
+							  camera.flyTo({ //camera 4 shot
+							  	destination : Cesium.Cartesian3.fromElements(-756036.1858473396, -5487297.972435797, 3175505.7204464697),
+							    orientation : {
+				                    heading : 0.3034147601824255,
+				                    pitch : -0.3546277411669658,
+				                    roll: 0.0009252072042746917
+							    },
+							    easingFunction : Cesium.EasingFunction.QUADRATIC_IN,
+							    duration: 5,
+							    complete: function() { 
+								  camera.flyTo({//camera 5 shot
+								  	destination : Cesium.Cartesian3.fromElements(-744035.4600646278, -5464952.3177197855, 3193916.5763302348),
+								    orientation : {
+					                    heading :  0.2657671784644684,
+					                    pitch : -0.2009460050043146,
+					                    roll: 0.0007825294353533963
+								    },
+								    easingFunction : Cesium.EasingFunction.QUADRATIC_IN,
+								    duration: 5
+								  }); //end camera 5 shot
+								}
+							  });//end camera 4 shot
+							}
+						  }); //end camera 3 shot
+						}
+					  
+
+					  });//end camera 2 shot
+				      
+			        }, 3000);
+			    }
+			});//end camera 1 shot
+		});
+
+		$('#fly-through-bogota-button').on('click', function(){
+			camera.flyTo({ //camera 1 shot
+			    destination : Cesium.Cartesian3.fromElements(4743214.209656013, -12846886.31568322, 379312.85675280675),
+			    orientation : {
+			      heading : 0.0004908080035601614,
+			      pitch : -1.5687788332051515,
+			      roll : 0
+			    },
+			    easingFunction : Cesium.EasingFunction.LINEAR_NONE,
+			    complete : function() {
+			      setTimeout(function() {
+			      camera.flyTo({ //camera 2 shot
+			      destination : Cesium.Cartesian3.fromElements(1929907.8824058848, -6694324.947700792, 542831.5479720009),
+			      orientation : {
+			        heading : 6.281777138885462,
+			        pitch : -1.5669973547799025,
+			        roll : 0
+			      },
+			      easingFunction : Cesium.EasingFunction.CIRCULAR_OUT,
+			      complete: function() { 
+			        camera.flyTo({ //camera 3 shot
+			          destination : Cesium.Cartesian3.fromElements(1761714.292322472, -6177370.712415606, 515737.853029365),
+			          orientation : {
+			            heading : 6.281451825645375,
+			            pitch : -1.5666484683648596,
+			            roll : 0
+			          },
+			          easingFunction : Cesium.EasingFunction.QUADRATIC_IN,
+			          complete: function() { 
+			          camera.flyTo({ //camera 4 shot
+			            destination : Cesium.Cartesian3.fromElements(1744318.137136219, -6134201.398101823, 446995.06214200176),
+			              orientation : {
+			                heading : 0.07560094568496645,
+			                pitch : -0.23318590547455442,
+			                roll : 6.283127260451423
+			              },
+			            easingFunction : Cesium.EasingFunction.EXPONENTIAL_IN_OUT,
+			            duration: 5,
+			            complete: function() { 
+			            camera.flyTo({//camera 5 shot
+			              destination : Cesium.Cartesian3.fromElements(1747758.6218180053, -6117355.787226428, 509006.12730162684),
+			              orientation : {
+			                heading : 6.242073721927161,
+			                pitch : -1.4768434999923867,
+			                roll : 0.00005757880670920201
+			              },
+			              easingFunction : Cesium.EasingFunction.QUADRATIC_IN,
+			              duration: 5,
+			              complete: function() { 
+			              camera.flyTo({//camera 6 shot
+			                destination : Cesium.Cartesian3.fromElements(1747939.3153459828, -6116190.125813713, 508416.57236411265),
+			                orientation : {
+			                  heading : 5.4045732034980585,
+			                  pitch : -0.13586292611857398,
+			                  roll : 6.282769413045891
+			                },
+			                easingFunction : Cesium.EasingFunction.SINUSOIDAL_IN_OUT,
+			                duration: 5,
+			              complete: function() { 
+			              camera.flyTo({//camera 7 shot
+			                destination : Cesium.Cartesian3.fromElements(1746478.6028419551, -6115260.004067154, 516277.00727199594),
+			                orientation : {
+			                  heading : 3.135241302324138,
+			                  pitch : 0.012226598550237222,
+			                  roll : 0.0000031962832576226674
+			                },
+			                easingFunction : Cesium.EasingFunction.CIRCULAR_IN,
+			                duration: 5
+
+			                
+			                }); //end camera 7 shot
+			              }
+
+			                
+			                }); //end camera 6 shot
+			              }
+			            }); //end camera 5 shot
+			          }
+			          });//end camera 4 shot
+			        }
+			        }); //end camera 3 shot
+			      }
+			      
+
+			      });//end camera 2 shot
+			        
+			        }, 3000);
+			    }
+			});//end camera 1 shot
+		});
+
+		$('#fly-through-heliopolis-button').on('click', function(){
+			camera.flyTo({ //camera 1 shot
+			    destination : Cesium.Cartesian3.fromElements(4114396.23861135, -4341168.49123715, -2617618.0538070835),
+				orientation : {
+					heading : 5.974708435859849,
+					pitch : -1.4277837987541169,
+					roll : 0.0051826373180290375
+				},
+			    easingFunction : Cesium.EasingFunction.LINEAR_NONE,
+			    complete : function() {
+			      setTimeout(function() {
+			      camera.flyTo({ //camera 2 shot
+				  destination : Cesium.Cartesian3.fromElements(4048648.777992658, -4212094.4313866515, -2684227.2204619423),
+				  orientation : {
+					heading : 5.947071666471578,
+					pitch : -0.37289084553931584,
+					roll : 0.0008837617004280318
+				  },
+			      easingFunction : Cesium.EasingFunction.CIRCULAR_OUT,
+			      complete: function() { 
+			        camera.flyTo({ //camera 3 shot
+						destination : Cesium.Cartesian3.fromElements(4022084.9171752017, -4243577.183598845, -2556820.9124133023),
+						orientation : {
+							heading : 5.94997006231741,
+							pitch : -0.3529069669196292,
+							roll : 0.0008408931160088784
+						},
+			          easingFunction : Cesium.EasingFunction.QUADRATIC_IN,
+			          complete: function() { 
+			          camera.flyTo({ //camera 4 shot
+			         	destination : Cesium.Cartesian3.fromElements(4024036.548174772, -4245478.011623225, -2540292.305745114),
+						orientation : {
+							heading : 4.699513531195066,
+							pitch : -0.40233007019024947,
+							roll : 0.0026730265241878826
+						},
+			            easingFunction : Cesium.EasingFunction.EXPONENTIAL_IN_OUT,
+			            duration: 5,
+			            complete: function() { 
+			            camera.flyTo({//camera 5 shot
+			            	destination : Cesium.Cartesian3.fromElements(4020180.0980214262, -4250149.238250935, -2540483.0704719718),
+							orientation : {
+								heading : 5.777291367510548,
+								pitch : -1.5595453485448547,
+								roll : 0
+							},
+			              easingFunction : Cesium.EasingFunction.QUADRATIC_IN,
+			              duration: 5,
+			              complete: function() { 
+			              camera.flyTo({//camera 6 shot
+							destination : Cesium.Cartesian3.fromElements(4018776.522124197, -4248050.882937766, -2541058.341054206),
+							orientation : {
+								heading : 5.95224310341947,
+								pitch : -0.5307512615965817,
+								roll : 0.0009258716562525748
+							},
+			                easingFunction : Cesium.EasingFunction.SINUSOIDAL_IN_OUT,
+			                duration: 5,
+			              complete: function() { 
+			              camera.flyTo({//camera 7 shot
+							destination : Cesium.Cartesian3.fromElements(4018637.5095595857, -4248866.375326221, -2538732.7173425136),
+							orientation : {
+								heading : 2.6947772819164273,
+								pitch : -0.088332194370496,
+								roll : 6.282118377800003
+							},
+			                easingFunction : Cesium.EasingFunction.CIRCULAR_IN,
+			                duration: 5
+
+			                
+			                }); //end camera 7 shot
+			              }
+
+			                
+			                }); //end camera 6 shot
+			              }
+			            }); //end camera 5 shot
+			          }
+			          });//end camera 4 shot
+			        }
+			        }); //end camera 3 shot
+			      }
+			      
+
+			      });//end camera 2 shot
+			        
+			        }, 3000);
+			    }
+			});//end camera 1 shot
+		});
+
+		$('#fly-through-heliopolis-button2').on('click', function(){
+			camera.flyTo({ //camera 1 shot
+			    destination : Cesium.Cartesian3.fromElements(4018896.783390436, -4248160.594722259, -2539457.8005241062),
+				orientation : {
+					heading : 4.016713039726935,
+					pitch : -0.18166695537599198,
+					roll : 0.0019202345549036437
+				},
+			    easingFunction : Cesium.EasingFunction.LINEAR_NONE,
+			});//end camera 1 shot
+		});
+
+    }); //End of jQuery
+
+    //  //track the camera
+
+       handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+       handler.setInputAction(function(movement) {
+        // console.log('Coordinates: ' + viewer.camera.position);
+        // // console.log('Height: ' + viewer.camera.positionCartographic.height);
+        // console.log('Heading: ' + viewer.camera.heading);
+        // console.log('Pitch: ' + viewer.camera.pitch);
+        // console.log('Roll: ' + viewer.camera.roll);
+        console.log('destination : Cesium.Cartesian3.fromElements' + viewer.camera.position + ',\norientation : {\n\theading : ' + viewer.camera.heading + ',\n\tpitch : ' + viewer.camera.pitch + ',\n\troll : ' + viewer.camera.roll + '\n},');
+    },  Cesium.ScreenSpaceEventType.LEFT_CLICK);
+            
+  </script>
+</body>
+</html>
