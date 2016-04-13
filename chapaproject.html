@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" extlang="pt">
+<head>
+  <!-- Use correct character set. -->
+  <meta charset="utf-8">
+  <!-- Tell IE to use the latest, best version (or Chrome Frame if pre-IE11). -->
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <title>The Chapa Project</title>
+  <script src="../Build/Cesium/Cesium.js"></script>
+  <script type="text/javascript" src="data/heliopolis-lots-degrees.js"></script>
+  <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/own-style.css">
+  <style>
+      @import url(../Build/Cesium/Widgets/widgets.css);
+      html, body, #cesiumContainer {
+          width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+      }
+  </style>
+</head>
+<body>
+	<div id="ut-logo">
+	<img src="css/ut_logo.png" />
+		<h4 class="cesium-viewer">the CHAPA Project</h4>
+		<p class="cesium-viewer">São Paulo, Brazil<p>
+	</div>
+	<button id="fly-through-heliopolis-button2" class="btn btn-info">Fly to Heliopolis</button>
+	<button id="run-scenario-impact" class="cesium-button" title="Cluster Analysis Snapshot">Explore Business as Usual</button>
+	<button id="run-scenario-impact2" class="cesium-button" title="Cluster Analysis Snapshot">Explore High Commercial</button>
+	<button id="run-scenario-impact3" class="cesium-button" title="Cluster Analysis Snapshot">Explore Self Help, Mix A</button>
+	<button id="run-scenario-impact3" class="cesium-button" title="Cluster Analysis Snapshot">Explore Self Help, Mix B</button>
+	<div id="scenario-results" > 
+		<p>Business as Usual</p>
+		<p>New Population: <span id="cluster-population">3123</span></p>
+		<p>New Employment: <span id="cluster-employment">1124</span></p>
+		<p>Walk Score: <span id="cluster-prosperity">100</span></p>
+		<p><b>Top Building Types:</b></p>
+		<ol>
+			<li><span id="cluster-strongest1">High Density Commercial</span></li>
+			<li><span id="cluster-strongest2">Large Mall</span></li>
+			<li><span id="cluster-strongest3">Condominium, 8 Story</span></li>
+			<li><span id="cluster-strongest4">Medium Density Commercial</span></li>
+			<li><span id="cluster-strongest5">Condominium, 6 Story</span></li>
+		</ol>
+		<hr style="width:50%">
+		<p>Displaced Population: <span id="cluster-strength">4,000</span></p>
+		<p>Average Income: <span id="cluster-strength">$57,000 US</span></p>
+		<p>Average Rental Price: <span id="cluster-strength">$1,000/month US</span></p>
+		<p>New Construction Value: <span id="cluster-strength"></span></p>
+	</div>
+	<div id="cesiumContainer"></div>
+	<script type="text/javascript" src="js/cesium-helio.js"></script>
+</body>
+</html>

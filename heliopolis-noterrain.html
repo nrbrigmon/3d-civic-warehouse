@@ -21,6 +21,28 @@
   </style>
 </head>
 <body>
+<script type="text/javascript">
+var x;
+console.log('running');
+function getLocation() {
+    if (navigator.geolocation) {
+    	navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        x  = "Geolocation is not supported by this browser.";
+    }
+}
+function showPosition(position) {
+	var x = position.coords.latitude;
+	var y = position.coords.longitude;
+    $("#run-scenario-impact3").html = "Latitude: " + x + "<br>Longitude: " + y;
+    alert("Your coordinates are: " + 
+    	"Latitude: " + x + 
+    	"Longitude: " + y);
+}
+getLocation();
+
+
+</script>
   <div id="ut-logo">
     <img src="css/ut_logo.png" />
       <h4 class="cesium-viewer">3D Warehouse</h4>
@@ -37,28 +59,29 @@
         <input id="layer-buildings" type="checkbox" checked="true"> Heliopolis Buildings <br>
       </div>
   </div>
-  <button id="run-scenario-impact" class="cesium-button" title="Cluster Analysis Snapshot">Explore Scenario 1</button>
-  <button id="run-scenario-impact2" class="cesium-button" title="Cluster Analysis Snapshot">Explore Scenario 2</button>
-  <button id="run-scenario-impact3" class="cesium-button" title="Cluster Analysis Snapshot">Explore Scenario 3</button>
-  <div id="scenario-results" > 
-	  	<p>Scenario 1</p>
-	  	<p>Total Population: <span id="cluster-population">3123</span></p>
-	  	<p>Total Employment: <span id="cluster-employment">1124</span></p>
-	  	<p>Walk Score: <span id="cluster-prosperity">100</span></p>
-	  	<p><b>Top Building Types:</b></p>
-	  	<ol>
-	  		<li><span id="cluster-strongest1">Type A</span></li>
-	  		<li><span id="cluster-strongest2">Type B</span></li>
-	  		<li><span id="cluster-strongest3">Type C</span></li>
-	  		<li><span id="cluster-strongest4">Type D</span></li>
-	  		<li><span id="cluster-strongest5">Type E</span></li>
-	  	</ol>
-	  	<hr style="width:50%">
-	  	<p>Data Point (a): <span id="cluster-strength"></span></p>
-	  	<p>Data Point (b): <span id="cluster-strength"></span></p>
-	  	<p>Data Point (c): <span id="cluster-strength"></span></p>
-	  	<p>Data Point (d): <span id="cluster-strength"></span></p>
-  </div>
+	  <button id="run-scenario-impact" class="cesium-button" title="Cluster Analysis Snapshot">Explore Business as Usual</button>
+	  <button id="run-scenario-impact2" class="cesium-button" title="Cluster Analysis Snapshot">Explore High Commercial</button>
+	  <button id="run-scenario-impact3" class="cesium-button" title="Cluster Analysis Snapshot">Explore Self Help, Mix A</button>
+	  <button id="run-scenario-impact3" class="cesium-button" title="Cluster Analysis Snapshot">Explore Self Help, Mix B</button>
+	  <div id="scenario-results" > 
+		  	<p>Business as Usual</p>
+		  	<p>New Population: <span id="cluster-population">3123</span></p>
+		  	<p>New Employment: <span id="cluster-employment">1124</span></p>
+		  	<p>Walk Score: <span id="cluster-prosperity">100</span></p>
+		  	<p><b>Top Building Types:</b></p>
+		  	<ol>
+		  		<li><span id="cluster-strongest1">High Density Commercial</span></li>
+		  		<li><span id="cluster-strongest2">Large Mall</span></li>
+		  		<li><span id="cluster-strongest3">Condominium, 8 Story</span></li>
+		  		<li><span id="cluster-strongest4">Medium Density Commercial</span></li>
+		  		<li><span id="cluster-strongest5">Condominium, 6 Story</span></li>
+		  	</ol>
+		  	<hr style="width:50%">
+		  	<p>Displaced Population: <span id="cluster-strength">4,000</span></p>
+		  	<p>Average Income: <span id="cluster-strength">$57,000 US</span></p>
+		  	<p>Average Rental Price: <span id="cluster-strength">$1,000/month US</span></p>
+		  	<p>New Construction Value: <span id="cluster-strength"></span></p>
+	  </div>
   <div id="cesiumContainer"></div>
   <script>
 
@@ -68,23 +91,7 @@
 
     var camera = viewer.scene.camera;
 
-    // var addModel = function (lng, lat, model){
-    //         viewer.entities.add({
-    //             name : model,
-    //             position : Cesium.Cartesian3.fromDegrees(lng, lat, 0),
-    //             model : {
-    //                 uri : 'data/'+model+'.gltf'
-    //             },
-    //             description:'<p>Here is where you could provide <a href="">download links</a>, information about the model, or a</p>'+
-    //                       '<table>'+
-    //                       '<tr><th>#</th><th>Name</th></tr>'+
-    //                       '<tr><td>1. </td><td>table</td></tr>'+
-    //                       '<tr><td>2. </td><td>of</td></tr>'+
-    //                       '<tr><td>3. </td><td>data</td></tr>'+
-    //                       '</table>'+'<p>plus room for HTML...</p>',
-    //         });
-    // };
-
+   
 	function getRandomHeight() {
 		var h = Math.floor(Math.random()*5)+4;
 		return h;
